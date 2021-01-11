@@ -42,7 +42,7 @@ app.post("/repositories", (request, response) => {
 app.put("/repositories/:id", (request, response) => {
   //recupera os dados vindos do front-end
   const { id } = request.params;
-  const { title, url, techs, likes } = request.body;
+  const { title, url, techs } = request.body;
 
   //procura o índice do projeto
   const repositoryIndex = repositories.findIndex(repository => repository.id === id);
