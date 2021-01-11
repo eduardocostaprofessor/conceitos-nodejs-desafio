@@ -14,8 +14,6 @@ const repositories = [];
 app.get("/repositories", (request, response) => {
 
   const { title } = request.query;
-
-  console.log(title);
   const results = title
     ? repositories.filter(repository => repository.title.toLocaleLowerCase().includes(title.toLocaleLowerCase()))
     : repositories;
@@ -59,7 +57,8 @@ app.put("/repositories/:id", (request, response) => {
     title,
     url,
     techs,
-    likes
+    //maintains the amount of old like
+    likes: repositories[repositoryIndex].likes  
   }
 
   repositories[repositoryIndex] = repository
@@ -79,11 +78,20 @@ app.delete("/repositories/:id", (request, response) => {
   repositories.splice(repositoryIndex, 1);
 
   //It`s recomended status code 204 for a empty response!
-  return response.status(204).json();
+  return response.status(204).json(id);
 });
 
 app.post("/repositories/:id/like", (request, response) => {
   // TODO
+  const { id } = request.params;
+  const repository = repositories.find( rep => rep.id == id);
+
+  if( !repository) 
+    return response.status(400).json()  
+  
+  repository.likes++;
+
+  return response.status(200).json(repository);
 });
 
 module.exports = app;
